@@ -1,8 +1,8 @@
 package ru.ntlk.corpelib.bookloaders.book;
 
 public class Page {
-    private String text;
-    private String html;
+    private final String text;
+    private final String html;
     private int pageNumber;
 
     public Page(int pageNumber, String text, String html) {

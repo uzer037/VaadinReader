@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Book {
+    private final List<Page> pages = new ArrayList<>();
 
     public static Book mergeBookParts(List<Book> parts) {
         Book book = new Book();
@@ -13,7 +14,6 @@ public class Book {
         }
         return book;
     }
-    private List<Page> pages = new ArrayList<>();
     // for images 25 px of height approximately equals to 1 row of characters (60 chars)
     public void addPage(Page page) {
         page.updatePageNumber(getNextPageNumber());

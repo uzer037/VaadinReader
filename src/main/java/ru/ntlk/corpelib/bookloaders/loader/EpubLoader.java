@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EpubLoader extends BookLoader {
-    private EpubReader epubReader = new EpubReader();
+    private final EpubReader epubReader = new EpubReader();
+
     Book parseSpineToBook(String html) {
         Document document = Jsoup.parse(html);
         Book currentBook = new Book();

@@ -17,57 +17,64 @@ import java.io.InputStream;
 @Route(value = "detail")
 public class DetailView extends VerticalLayout {
     // elements
-    Html viewerFrame = new Html("<div>Loading your book...</div>");
-    Paragraph pageIndicator = new Paragraph();
-    Button prevPageButton = new Button("<");
-    Button nextPageButton = new Button(">");
-    EpubLoader parser = new EpubLoader();
-    Book book = null;
-    InputStream bookStream = getClass().getClassLoader().getResourceAsStream("Spring REST 2022.epub");
-    int pageNumber = 1;
+    private final Html viewerFrame = new Html("<div>Loading your book...</div>");
+    private final Paragraph pageIndicator = new Paragraph();
+    private final EpubLoader parser = new EpubLoader();
 
-    private void loadBook() {
-        try {
-            book = parser.loadBook(bookStream);
-        } catch (IOException e) {
-            System.err.println("File provided does not exists or inaccessible: " + e);
-        }
-    }
+    private Book book = null;
+    private int pageNumber = 1;
 
-    private void redrawPage() {
-        if(book != null) {
-            viewerFrame.setHtmlContent("<div class=\"book-content\">" + book.getPage(pageNumber).getHtml() + "</div>");
-        }
-    }
-    public DetailView() {
+    public DetailView() throws IllegalAccessException {
         // functional stuff
         loadBook();
         redrawPage();
         add(viewerFrame);
 
         // UI stuff
+        Button prevPageButton = new Button("<");
+        Button nextPageButton = new Button(">");
+
         HorizontalLayout controlsLayout = new HorizontalLayout();
-        prevPageButton.addSingleClickListener(e->{selectPrevPage(); redrawPage();});
+        prevPageButton.addSingleClickListener(e -> {
+            selectPrevPage();
+            redrawPage();
+        });
         controlsLayout.add(prevPageButton);
 
         pageIndicator.setText(String.valueOf(pageNumber));
         controlsLayout.add(pageIndicator);
 
-        nextPageButton.addSingleClickListener(e->selectNextPage());
+        nextPageButton.addSingleClickListener(e -> selectNextPage());
         controlsLayout.add(nextPageButton);
         add(controlsLayout);
     }
 
-    private void selectPrevPage() {
-        --pageNumber;
-        pageNumber = Math.max(pageNumber, 1);
-        pageIndicator.setText(String.valueOf(pageNumber));
-        redrawPage();
+    private void loadBook() throws IllegalAccessException {
+        long start = System.currentTimeMillis();
+        try (InputStream bookStream = getClass().getClassLoader().getResourceAsStream("Spring REST 2022.epub")) {
+            book = parser.loadBook(bookStream);
+
+
+        } catch (IOException e) {
+            throw new IllegalAccessException("Wrong book");
+        }
     }
-    private void selectNextPage() {
-        ++pageNumber;
-        pageNumber = Math.min(pageNumber, book.getNextPageNumber()-1);
+
+    private void redrawPage() {
+        viewerFrame.setHtmlContent("<div class='book-content'>" + book.getPage(pageNumber).getHtml() + "</div>");
         pageIndicator.setText(String.valueOf(pageNumber));
-        redrawPage();
+
+    }
+
+    private void selectPrevPage() {
+        if (pageNumber != 1) {
+            pageNumber--;
+        }
+    }
+
+    private void selectNextPage() {
+        if (pageNumber != book.getNextPageNumber() - 1) {
+            pageNumber++;
+        }
     }
 }

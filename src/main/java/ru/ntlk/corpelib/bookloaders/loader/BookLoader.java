@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class BookLoader {
+    static int maxCharPerPage = 1800;
+    static int maxCharPerLine = 80;
     // Planning Epub, fb2 and pdf support, else is optional
     /**
      * Method that parses book's text file to java object
@@ -15,8 +17,6 @@ public abstract class BookLoader {
     public static boolean isFitsOnPage(int paragraphLength) {
         return paragraphLength <= maxCharPerPage;
     }
-    static int maxCharPerPage = 1800;
-    static int maxCharPerLine = 80;
     /**
      * tolerable deviation from the maximum number of characters:
      * paragraph will fit to current page if
