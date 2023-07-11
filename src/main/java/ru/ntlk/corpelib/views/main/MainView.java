@@ -1,5 +1,8 @@
 package ru.ntlk.corpelib.views.main;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.router.RouteParam;
 import ru.ntlk.corpelib.Category;
 import ru.ntlk.corpelib.views.categories.CategoriesView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,7 +13,7 @@ import com.vaadin.flow.router.Route;
 
 import java.util.Optional;
 
-@PageTitle("Список кник")
+@PageTitle("Список книг")
 @Route(value = "")
 public class MainView extends VerticalLayout {
     private TreeDataProvider<Category> categoryProvider;
@@ -20,6 +23,22 @@ public class MainView extends VerticalLayout {
     }
 
     private TreeData<Category> getCategories() {
+
+        // Example redirect to Book Viewer
+        add(new Button("Пример книги: Spring REST 2022",
+                buttonClickEvent ->
+                    UI.getCurrent().navigate(
+                            DetailView.class,
+                            new RouteParam("book","Spring REST 2022.epub"),
+                            new RouteParam("page", "1")
+                    )));
+        add(new Button("Пример книги: Остров сокровищ",
+                buttonClickEvent -> UI.getCurrent().navigate(
+                            DetailView.class,
+                            new RouteParam("book","treasure-island.epub"),
+                            new RouteParam("page", "1")
+                )));
+
         TreeData<Category> categories = new TreeData<>();
         categories.addRootItems(
                 new Category("Разработка"),

@@ -54,7 +54,7 @@ class EpubLoaderTest {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("spine_example.xhtml");
         final String spineXHTML = stream.readAllBytes().toString();
 
-        assertThatCode(()->parser.parseSpineToBook(spineXHTML)).doesNotThrowAnyException();
+        assertThatCode(()->parser.parseSpineToPages(spineXHTML)).doesNotThrowAnyException();
     }
     @Test
     void loadAndParseTest() throws IOException{
