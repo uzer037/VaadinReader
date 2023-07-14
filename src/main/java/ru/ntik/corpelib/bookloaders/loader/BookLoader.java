@@ -1,5 +1,5 @@
-package ru.ntlk.corpelib.bookloaders.loader;
-import ru.ntlk.corpelib.bookloaders.book.Book;
+package ru.ntik.corpelib.bookloaders.loader;
+import ru.ntik.corpelib.bookloaders.book.Book;
 
 import java.io.IOException;
 import java.io.InputStream;

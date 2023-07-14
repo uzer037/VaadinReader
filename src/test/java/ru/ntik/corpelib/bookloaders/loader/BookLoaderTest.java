@@ -1,10 +1,9 @@
-package ru.ntlk.corpelib.bookloaders.loader;
+package ru.ntik.corpelib.bookloaders.loader;
 
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BookLoaderTest {
 

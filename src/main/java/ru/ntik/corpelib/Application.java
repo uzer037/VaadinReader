@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib;
+package ru.ntik.corpelib;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;

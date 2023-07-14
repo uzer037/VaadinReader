@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib.views.main;
+package ru.ntik.corpelib.views.main;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
@@ -10,8 +10,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 
-import ru.ntlk.corpelib.bookloaders.book.Book;
-import ru.ntlk.corpelib.bookloaders.loader.EpubLoader;
+import ru.ntik.corpelib.bookloaders.loader.EpubLoader;
+import ru.ntik.corpelib.bookloaders.book.Book;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

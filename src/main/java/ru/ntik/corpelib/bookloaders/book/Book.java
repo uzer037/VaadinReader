@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib.bookloaders.book;
+package ru.ntik.corpelib.bookloaders.book;
 
 import java.util.ArrayList;
 import java.util.Collection;

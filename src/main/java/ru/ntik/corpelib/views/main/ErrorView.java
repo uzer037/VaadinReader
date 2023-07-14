@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib.views.main;
+package ru.ntik.corpelib.views.main;
 
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

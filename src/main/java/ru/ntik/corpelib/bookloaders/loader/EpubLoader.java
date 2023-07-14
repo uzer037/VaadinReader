@@ -1,32 +1,39 @@
-package ru.ntlk.corpelib.bookloaders.loader;
+package ru.ntik.corpelib.bookloaders.loader;
 
 import nl.siegmann.epublib.domain.Resources;
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.ntlk.corpelib.bookloaders.book.Book;
+import ru.ntik.corpelib.bookloaders.book.Book;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.SpineReference;
 import nl.siegmann.epublib.epub.EpubReader;
 import nl.siegmann.epublib.service.MediatypeService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import ru.ntlk.corpelib.bookloaders.book.Page;
+import ru.ntik.corpelib.bookloaders.book.Page;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class EpubLoader extends BookLoader {
     private final EpubReader epubReader = new EpubReader();
     private Map<String, String> imageMap = new HashMap<>();
 
+    // thanks to https://stackoverflow.com/a/31964093
+    // TODO: zipLists - extract to some utility class
+    public static <A, B> List<Map.Entry<A, B>> zipLists(List<A> as, List<B> bs) {
+        return IntStream.range(0, Math.min(as.size(), bs.size()))
+                .mapToObj(i -> Map.entry(as.get(i), bs.get(i)))
+                .collect(Collectors.toList());
+    }
+
     List<Page> parseSpineToPages(String html) {
         Document document = Jsoup.parse(html);
-        List<Page> pages = new ArrayList<>();
 
         // inserting base64 images
         Elements imgElements = document.select("img");
@@ -45,12 +52,23 @@ public class EpubLoader extends BookLoader {
         }
 
         List<Document> pageElements = HtmlSlicer.splitHtmlByContentLength(document, maxCharPerPage);
+        int pagesCount = pageElements.size();
 
-        int pageIndex = 1;
-        for(Document page : pageElements) {
-            pages.add(new Page(pageIndex, page.text(), page.outerHtml()));
-            pageIndex++;
-        }
+        // thanks to https://stackoverflow.com/a/22829036
+        List<Integer> pageIndexes = IntStream.rangeClosed(0, pagesCount-1).boxed().toList();
+
+        List<Map.Entry<Integer, Document>> pagesZip = zipLists(pageIndexes, pageElements);
+
+        // initializing with nulls
+        final List<Page> pages = new ArrayList<>(Collections.nCopies(pagesCount, null));
+
+        pagesZip.parallelStream().forEach(zip->{
+            int index = zip.getKey();
+            Document page = zip.getValue();
+            pages.set(index,
+                    new Page(index+1, page.text(), page.html()));
+        });
+
         return pages;
     }
 
@@ -60,8 +78,9 @@ public class EpubLoader extends BookLoader {
      * @param path resource path
      * @return file name
      */
+    // TODO: Tests - extractFileName
+    // TODO: extractFileName - test with different books, make sure that filenames cant overlap
     String extractFileName(String path) {
-        // TODO: test with different books, make sure that filenames cant overlap
         int pos = path.lastIndexOf("/") + 1;
         if (pos > 0) {
             return path.substring(pos);

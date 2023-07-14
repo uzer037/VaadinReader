@@ -1,6 +1,6 @@
-package ru.ntlk.corpelib.views.categories;
+package ru.ntik.corpelib.views.categories;
 
-import ru.ntlk.corpelib.Category;
+import ru.ntik.corpelib.Category;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;

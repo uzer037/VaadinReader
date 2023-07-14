@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib.bookloaders.loader;
+package ru.ntik.corpelib.bookloaders.loader;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -129,24 +129,24 @@ class HtmlSlicerTest {
 
     @Test
     void splitByLength() {
-        String sampleText = "Sample Text."; // 12 characters text
+        String sampleText = "Sample Text"; // 12 (11  characters text + number character
         int maxLength = 24;
         Document document = Jsoup.parse("" +
                 "<div>" +
                     "<div class=\"Test\">" +
-                        "<p class='class1'>" + sampleText + "</p>" +
-                        "<p class='class2'>" + sampleText + "</p>" +
-                        "<p class='class3'>" + sampleText + "</p>" +
+                        "<p class='class1'>" + sampleText + "1</p>" +
+                        "<p class='class2'>" + sampleText + "2</p>" +
+                        "<p class='class3'>" + sampleText + "3</p>" +
                     "</div>" +
                     "<div class=\"Test\">" +
-                        "<p class='class1'>" + sampleText + "</p>" +
-                        "<p class='class2'>" + sampleText + "</p>" +
-                        "<p class='class3'>" + sampleText + "</p>" +
+                        "<p class='class1'>" + sampleText + "4</p>" +
+                        "<p class='class2'>" + sampleText + "5</p>" +
+                        "<p class='class3'>" + sampleText + "6</p>" +
                     "</div>" +
                     "<div class=\"Test\">" +
-                        "<p class='class1'>" + sampleText + "</p>" +
-                        "<p class='class2'>" + sampleText + "</p>" +
-                        "<p class='class3'>" + sampleText + "</p>" +
+                        "<p class='class1'>" + sampleText + "7</p>" +
+                        "<p class='class2'>" + sampleText + "8</p>" +
+                        "<p class='class3'>" + sampleText + "9</p>" +
                     "</div>" +
                 "</div>");
 

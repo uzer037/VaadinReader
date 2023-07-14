@@ -1,10 +1,10 @@
-package ru.ntlk.corpelib.views.main;
+package ru.ntik.corpelib.views.main;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.RouteParam;
-import ru.ntlk.corpelib.Category;
-import ru.ntlk.corpelib.views.categories.CategoriesView;
+import ru.ntik.corpelib.Category;
+import ru.ntik.corpelib.views.categories.CategoriesView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;

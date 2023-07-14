@@ -1,4 +1,4 @@
-package ru.ntlk.corpelib;
+package ru.ntik.corpelib;
 
 public class Category {
     public Category(String name) {

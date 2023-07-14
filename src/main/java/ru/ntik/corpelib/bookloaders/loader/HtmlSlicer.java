@@ -1,8 +1,7 @@
-package ru.ntlk.corpelib.bookloaders.loader;
+package ru.ntik.corpelib.bookloaders.loader;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,7 @@ public class HtmlSlicer {
         }
         return previous;
     }
+    // TODO: Tests - splitHtmlByMarkedElement
     static List<Document> splitHtmlByMarkedElement(Document document) {
         Document preSplitDoc = document.clone();
         Document postSplitDoc = document;
@@ -73,26 +73,11 @@ public class HtmlSlicer {
         return List.of(preSplitDoc,postSplitDoc);
     }
     public static List<Document> splitHtmlByContentLength(Document document, int maxLength) {
-        // getting all leaf-elements (elements without child elements)
-        Elements leaves = document.select(":not(:has(*))");
-        // list of css selectors
-        int pageSymbolCount = 0;
-        int leafCharCount = 0;
+        SplitPointMarker marker = new SplitPointMarker();
+        document = marker.markSplitPoints(document, maxLength);
 
         // how much splits requiered
-        int splitCount = 0;
-
-        // getting split elements
-        for(Element leaf : leaves) {
-            leafCharCount = leaf.text().length();
-            if(pageSymbolCount + leafCharCount > maxLength) {
-                // marking leaf as split element
-                leaf.addClass(SPLIT_CLASS_NAME);
-                splitCount++;
-                pageSymbolCount = 0;
-            }
-            pageSymbolCount += leafCharCount;
-        }
+        int splitCount = document.select("."+SPLIT_CLASS_NAME).size();
 
         // splitting document by split elements
         List<Document> documentPages = new ArrayList<>(splitCount+1);
@@ -105,5 +90,46 @@ public class HtmlSlicer {
         }
         documentPages.add(unprocessedPart);
         return documentPages;
+    }
+
+    // dirty trick to make static class store some intermediate data during recursive calls
+    // TODO: Tests - class SplitPointMarker
+    static class SplitPointMarker {
+        Document document;
+        long currentPageLength;
+        long maxLength;
+        public Document markSplitPoints(Document document, long maxLength) {
+            this.document = document;
+            this.maxLength = maxLength;
+            tryFitOnPage(this.document.root());
+            return this.document;
+        }
+        private void tryFitOnPage(Element element) {
+            // there is no point in look for head, style or script elements
+            if (element.tagName().equals("head") || element.tagName().equals("style")
+                    || element.tagName().equals("script")) {
+                return;
+            }
+
+            long textLength = element.text().length();
+
+            // if element fit on page - fit and return to parent
+            if(currentPageLength + textLength < maxLength) {
+                this.currentPageLength = this.currentPageLength + textLength;
+            } else {
+                // else - check if any of children fit
+                if (element.childrenSize() != 0) {
+                    for (Element child : element.children()) {
+                        // for every child updating currentPageLength
+                        tryFitOnPage(child);
+                    }
+                } else {
+                    // if no children exist - mark as split element
+                    element.addClass(SPLIT_CLASS_NAME);
+                    // and reset page character count
+                    this.currentPageLength = 0;
+                }
+            }
+        }
     }
 }

@@ -1,12 +1,17 @@
-package ru.ntlk.corpelib.bookloaders.loader;
+package ru.ntik.corpelib.bookloaders.loader;
 
 import org.junit.jupiter.api.Test;
-import ru.ntlk.corpelib.bookloaders.book.Book;
+import ru.ntik.corpelib.bookloaders.book.Book;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 class EpubLoaderTest {
@@ -65,27 +70,20 @@ class EpubLoaderTest {
 
         assertThatCode(()->parser.loadBook(bookStream)).doesNotThrowAnyException();
     }
-    void speedTest() {
-        EpubLoader parser = new EpubLoader();
-        Book book = null;
 
-        long startTime = System.nanoTime();
-        int booksCount = 10;
-        for(int i = 0; i < booksCount; i++) {
-            try {
-                InputStream bookStream = getClass().getClassLoader().getResourceAsStream("treasure-island.epub");
-                book = parser.loadBook(bookStream);
-            } catch (IOException e) {
-                System.err.println("File provided does not exists or inaccessible: " + e);
-            }
-        }
-        long endTime = System.nanoTime();
-        Duration duration = Duration.ofNanos(endTime-startTime);
-        Duration avgDuration = Duration.ofNanos((endTime-startTime)/booksCount);
-        String formattedElapsedTime = getFormattedDuration(duration);
-        String formattedAvgElapsedTime = getFormattedDuration(avgDuration);
+    @Test
+    void zipLists() {
+        List<Integer> a = List.of(1,2,3,4);
+        List<String> b = List.of("a","b","c","d");
 
-        System.out.println("Processed " + booksCount + " books in " + formattedElapsedTime);
-        System.out.println("(" + formattedAvgElapsedTime + " per book on average)");
+        Map<Integer, String> expectedMap = new HashMap<>(){{
+            put(1,"a");
+            put(2,"b");
+            put(3,"c");
+            put(4,"d");
+        }};
+        List<Map.Entry<Integer, String>> resultList = EpubLoader.zipLists(a,b);
+        Map<Integer,String> resultMap = resultList.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        assertThat(resultMap).containsAllEntriesOf(expectedMap);
     }
 }
