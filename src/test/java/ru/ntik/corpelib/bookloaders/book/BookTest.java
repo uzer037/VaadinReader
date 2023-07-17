@@ -74,13 +74,13 @@ class BookTest {
         Page page2 = new Page(2, "Goodbye, World!", "<p>Goodbye, World!</p>");
         List<Page> pages = List.of(page1,page2);
 
-        assertThat(book.getNextPageNumber()).isEqualTo(1);
+        assertThat(book.getLastPageNumber()).isEqualTo(0);
 
         book.addPage(page1);
-        assertThat(book.getNextPageNumber()).isEqualTo(2);
+        assertThat(book.getLastPageNumber()).isEqualTo(1);
 
         book.addPages(pages);
-        assertThat(book.getNextPageNumber()).isEqualTo(4);
+        assertThat(book.getLastPageNumber()).isEqualTo(3);
     }
 
     @Test

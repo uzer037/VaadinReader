@@ -16,13 +16,13 @@ public class Book {
     }
     // for images 25 px of height approximately equals to 1 row of characters (60 chars)
     public void addPage(Page page) {
-        page.updatePageNumber(getNextPageNumber());
+        page.updatePageNumber(getLastPageNumber()+1);
         pages.add(page);
     }
     public void addPages(Collection<Page> pages) {
-        int lastPageNumber = getNextPageNumber() - 1; // -1 for array offset
+        int lastPageNumber = getLastPageNumber(); // -1 for array offset
         this.pages.addAll(pages);
-        for(int i = lastPageNumber; i < getNextPageNumber() - 1; i++) {
+        for(int i = lastPageNumber; i < getLastPageNumber(); i++) {
             this.pages.get(i).updatePageNumber(i+1);
         }
     }
@@ -32,11 +32,10 @@ public class Book {
     }
 
     /**
-     * ru.ntlk.corpelib.bookparser.Book.Page numeration goes from 1
-     * @return Next page number available
+     * @return Next page number available (Page numeration goes from 1)
      */
-    public int getNextPageNumber() {
-        return pages.size() + 1;
+    public int getLastPageNumber() {
+        return pages.size();
     }
 
     public Page getPage(int number) throws IndexOutOfBoundsException{
